@@ -19,7 +19,7 @@ export class MoodStone extends HTMLElement {
         <soul-searcher #></soul-searcher>
         <div>
             <h3>Example 1a</h3>
-            <input disabled be-invoking=howAmIFeelingAboutToday>
+            <input disabled do-invoke=howAmIFeelingAboutToday>
             <h3>Example 1b</h3>
             <input disabled 🕹️='howAmIFeelingAboutToday on change'>
             <h3>Example 1c</h3>
