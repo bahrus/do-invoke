@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1a</title>
+    <!-- #include virtual="/imports.html" -->
+    <script type=module>
+        import {Mount} from 'xtal-element/index.js';
+        import '/🕹️.js';
+        class MoodStoneBase extends Mount{
+            howAmIFeelingAboutToday(targetElement, event){
+                console.log({targetElement, event});
+            }
+        }
+        customElements.define('mood-stone-base', MoodStoneBase);
+    </script>
+</head>
+<body>
+    <mood-stone itemscope>
+        <button 🕹️=howAmIFeelingAboutToday>Feeling great</button>
+        <xtal-element inherits=mood-stone-base></xtal-element>
+    </mood-stone>
+</body>
+</html>

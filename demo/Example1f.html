@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1f</title>
+    <!-- #include virtual="/imports.html" -->
+    <script type=module>
+        import 'xtal-element/index.js';
+        import '/🕹️.js';
+        import 'be-methodical/🔬.js';
+    </script>
+    <script nomodule 🔬=mood-stone-base>({
+        howAmIFeelingAboutToday: (targetElement, event) => {
+            console.log({targetElement, event});
+        }
+    })</script>
+</head>
+<body>
+    <mood-stone itemscope>
+        <button disabled 🕹️=?.howAmIFeelingAboutToday>Feeling great</button>
+        <xtal-element inherits=mood-stone-base></xtal-element>
+    </mood-stone>
+</body>
+</html>
