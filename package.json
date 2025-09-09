@@ -1,0 +1,20 @@
+{
+  "name": "do-invoke",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "https://github.com/bahrus/do-invoke#readme",
+  "bugs": {
+    "url": "https://github.com/bahrus/do-invoke/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahrus/do-invoke.git"
+  },
+  "license": "MIT",
+  "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
+  "type": "module",
+  "main": "do-invoke.js",
+  "scripts": {
+    "test": "test playwright"
+  }
+}
