@@ -19,7 +19,7 @@ class DoInvoke extends BE {
     static config = {
         propInfo: {
             ...propInfo,
-            parsedStatements: {},
+            parsedStatements: {def: [{remoteSpecifier: {}}]},
             rawStatements: {},
         },
         compacts:{
@@ -73,8 +73,8 @@ class DoInvoke extends BE {
             }
             let {prop} = remoteSpecifier;
             const methodName = prop || enhancedElement.getAttribute('name');
-            if(!prop) throw 404;
-            remoteTarget[prop](remoteTarget, e);
+            if(!methodName) throw 404;
+            remoteTarget[methodName](remoteTarget, e);
             //TODO support path, chained optional accessor
         }
     }
