@@ -72,7 +72,8 @@ class DoInvoke extends BE {
                 this.#cache.set(remoteSpecifier, new WeakRef(remoteTarget));
             }
             let {prop} = remoteSpecifier;
-            if(prop === undefined) throw 404;
+            const methodName = prop || enhancedElement.getAttribute('name');
+            if(!prop) throw 404;
             remoteTarget[prop](remoteTarget, e);
             //TODO support path, chained optional accessor
         }
