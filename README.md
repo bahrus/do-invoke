@@ -22,7 +22,6 @@ Another enhancement, [be-modding](https://github.com/bahrus/be-modding), takes a
 ```html
 <script type=module>
     import {Mount} from 'xtal-element/index.js';
-    import '/🕹️.js';
     class MoodStoneBase extends Mount{
         howAmIFeelingAboutToday(targetElement, event){
             console.log({targetElement, event});
@@ -49,6 +48,27 @@ It passes in two arguments:
 2.  The event that triggered the action. 
 
 Note that the name of this package, "do-invoke" is the canonical name of this element enhancement.  It is a bit long, but benefits from making the markup somewhat self-explanatory.  It is easy to choose your own name, as demonstrated by [this file](https://github.com/bahrus/do-invoke/blob/baseline/%F0%9F%95%B9%EF%B8%8F.ts).
+
+## Example 1a with inference
+
+We can infer the name of the method to invoke from the name attribute of the element *do-invoke* adorns:
+
+```html
+<script type=module>
+    import {Mount} from 'xtal-element/index.js';
+    class MoodStoneBase extends Mount{
+        howAmIFeelingAboutToday(targetElement, event){
+            console.log({targetElement, event});
+        }
+    }
+    customElements.define('mood-stone-base', MoodStoneBase);
+</script>
+...
+<mood-stone itemscope>
+    <button disabled name=howAmIFeelingAboutToday 🕹️>Feeling great</button>
+    <xtal-element inherits=mood-stone-base></xtal-element>
+</mood-stone>
+```
 
 ## Example 1b  Specifying the event
 
