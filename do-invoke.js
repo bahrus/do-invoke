@@ -34,7 +34,7 @@ class DoInvoke extends BE {
     #cache = new Map();
     async hydrate(self) {
         const { parsedStatements, enhancedElement } = self;
-        const { nudge } = await import('trans-render/lib/nudge.js');
+        const { nudge } = await import('mount-observer/refid/nudge.js');
         /** @type Set<string> */
         const alreadyAdded = new Set();
         for (const parsedStatement of parsedStatements) {
