@@ -58,6 +58,7 @@ class DoInvoke extends BE {
      * @param {Event} e 
      */
     async handleEvent(e){
+        const {target} = e;
         const self = /** @type {BAP & BEAllProps} */ (/** @type {any} */ (this));
         const { parsedStatements, enhancedElement } = self;
         const { find } = await import('trans-render/dss/find.js');
@@ -74,7 +75,13 @@ class DoInvoke extends BE {
             let {prop} = remoteSpecifier;
             const methodName = prop || enhancedElement.getAttribute('name');
             if(!methodName) throw 404;
-            remoteTarget[methodName](remoteTarget, e);
+            /** @type {Event} */
+            const clone = {};
+            for(const key in e){
+                clone[key] = e[key];
+            }
+            clone.target = target
+            remoteTarget[methodName](remoteTarget, clone);
             //TODO support path, chained optional accessor
         }
     }
