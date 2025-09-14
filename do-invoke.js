@@ -75,7 +75,7 @@ class DoInvoke extends BE {
             let {prop} = remoteSpecifier;
             const methodName = prop || enhancedElement.getAttribute('name');
             if(!methodName) throw 404;
-            /** @type {Event} */
+            /** @type {any} */
             const clone = {};
             for(const key in e){
                 clone[key] = e[key];
