@@ -19,11 +19,11 @@ class DoInvoke extends BE {
     static config = {
         propInfo: {
             ...propInfo,
-            parsedStatements: {def: [{remoteSpecifier: {}}]},
+            invokeParamSets: {def: [{remoteSpecifier: {}}]},
             rawStatements: {},
         },
         compacts:{
-            when_parsedStatements_changes_call_hydrate: 0,
+            when_invokeParamSets_changes_call_hydrate: 0,
         },
         positractions: [
             resolved, rejected
@@ -32,12 +32,17 @@ class DoInvoke extends BE {
     //#abortControllers = [];
     /** @type {Map<Specifier, WeakRef<EventTarget>>} */
     #cache = new Map();
+    /**
+     * 
+     * @param {BAP} self 
+     * @returns 
+     */
     async hydrate(self) {
-        const { parsedStatements, enhancedElement } = self;
+        const { invokeParamSets, enhancedElement } = self;
         const { nudge } = await import('mount-observer/refid/nudge.js');
         /** @type Set<string> */
         const alreadyAdded = new Set();
-        for (const parsedStatement of parsedStatements) {
+        for (const parsedStatement of invokeParamSets) {
             let { localEventType } = parsedStatement;
             if (localEventType === undefined) {
                 const { stdEvt } = await import('trans-render/asmr/stdEvt.js');
@@ -48,9 +53,9 @@ class DoInvoke extends BE {
             alreadyAdded.add(localEventType);
         }
         nudge(enhancedElement);
-        return {
+        return /** @type {PAP} */ ({
             resolved: true
-        };
+        });
     }
 
     /**
@@ -60,9 +65,9 @@ class DoInvoke extends BE {
     async handleEvent(e){
         const {target} = e;
         const self = /** @type {BAP & BEAllProps} */ (/** @type {any} */ (this));
-        const { parsedStatements, enhancedElement } = self;
+        const { invokeParamSets, enhancedElement } = self;
         const { find } = await import('trans-render/dss/find.js');
-        for (const parsedStatement of parsedStatements) {
+        for (const parsedStatement of invokeParamSets) {
             const {remoteSpecifier} = parsedStatement;
             let remoteTarget = this.#cache.get(remoteSpecifier)?.deref();
             if (remoteTarget === undefined) {

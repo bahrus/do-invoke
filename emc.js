@@ -1,7 +1,7 @@
 // @ts-check
 import { BeHive, seed, MountObserver } from 'be-hive/be-hive.js';
 /** @import {EMC, EventListenerOrFn} from './ts-refs/trans-render/be/types' */
-/** @import {Actions, PAP,  AP} from './ts-refs/be-invoking/types' */;
+/** @import {Actions, PAP,  AP} from './ts-refs/do-invoke/types' */;
 
 const targetsPart = String.raw `^(?<targetPart>.*)`;
 const targetsPartOnEventType = String.raw `${targetsPart} on (?<localEventType>.*)`;
@@ -21,7 +21,7 @@ export const emc = {
             instanceOf: 'Object$entences',
             objValMapsTo: '.',
             regExpExts: {
-                parsedStatements: [
+                invokeParamSets: [
                     {
                         regExp: targetsPartOnEventType,
                         defaultVals: {},
