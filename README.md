@@ -137,7 +137,7 @@ import 'do-invoke/do-invoke.js';
 
 ```html
 <script type=module crossorigin=anonymous>
-    import 'https://esm.run/do-invoke';
+    import 'https://esm.sh/do-invoke';
 </script>
 ```
 

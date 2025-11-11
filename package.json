@@ -22,7 +22,7 @@
   "main": "do-invoke.js",
   "module": "do-invoke.js",
   "scripts": {
-    "serve": "python3 ./node_modules/ssi-server/ssi_server.py",
+    "serve": "node ./node_modules/spa-ssi/serve.js",
     "test": "playwright test",
     "safari": "npx playwright wk http://localhost:8000",
     "update": "ncu -u && npm install"
@@ -34,9 +34,9 @@
     "trans-render": "0.0.960"
   },
   "devDependencies": {
-    "ssi-server": "0.0.7",
-    "@playwright/test": "1.56.0",
-    "xtal-element": "0.0.635",
+    "spa-ssi": "0.0.23",
+    "@playwright/test": "1.56.1",
+    "xtal-element": "0.0.637",
     "be-methodical": "0.0.2"
   }
 }
