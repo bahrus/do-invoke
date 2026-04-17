@@ -22,20 +22,20 @@
   "main": "do-invoke.js",
   "module": "do-invoke.js",
   "scripts": {
+    "build": "node emc.mjs > emc.json && node 🕹️.mjs > 🕹️.json",
     "serve": "node ./node_modules/spa-ssi/serve.js",
     "test": "playwright test",
     "safari": "npx playwright wk http://localhost:8000",
     "update": "ncu -u && npm install"
   },
   "dependencies": {
-    "be-enhanced": "0.0.189",
-    "be-hive": "0.0.267",
-    "mount-observer": "0.0.105",
-    "trans-render": "0.0.960"
+    "be-hive": "0.1.11",
+    "mount-observer": "0.1.28",
+    "roundabout-lib": "0.0.7"
   },
   "devDependencies": {
-    "spa-ssi": "0.0.23",
-    "@playwright/test": "1.56.1",
+    "@playwright/test": "1.59.1",
+    "spa-ssi": "0.0.27",
     "xtal-element": "0.0.637",
     "be-methodical": "0.0.2"
   }

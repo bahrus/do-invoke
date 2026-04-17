@@ -1,97 +1,108 @@
 // @ts-check
-import { BE } from 'be-enhanced/BE.js';
-import { propInfo, resolved, rejected } from 'be-enhanced/cc.js';
-import { dispatchEvent as de } from 'trans-render/positractions/dispatchEvent.js';
+/** @import {Actions, PAP, AllProps, AP} from './types/do-invoke/types' */;
+/** @import {RoundaboutOptions} from './types/roundabout/types' */;
+/** @import {ElementEnhancementGateway} from './types/assign-gingerly/types' */;
+/** @import {EMC} from './types/mount-observer/types' */;
+/** @import {RAConfig} from './types/roundabout/types' */;
+/**
+ * @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>}
+ */
+import emc from './emc.json' with {type: 'json'};
 
-/** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AP, BAP, InvokingParameters} from './ts-refs/do-invoke/types' */
-/** @import {Specifier} from './ts-refs/trans-render/dss/types' */
+const {customData} = emc;
 
 /**
  * @implements {Actions}
  * @implements {EventListenerObject}
  */
-class DoInvoke extends BE {
-    de = de;
+class DoInvoke {
+
     /**
-     * @type {BEConfig<BAP, Actions & IEnhancement, any>}
+     * @this {AllProps & Actions}
+     * @param {Element & ElementEnhancementGateway} enhancedElement 
+     * @param {*} ctx 
+     * @param {AllProps} initVals 
      */
-    static config = {
-        propInfo: {
-            ...propInfo,
-            invokeParamSets: {def: [{remoteSpecifier: {}}]},
-            rawStatements: {},
-        },
-        compacts:{
-            when_invokeParamSets_changes_call_hydrate: 0,
-        },
-        positractions: [
-            resolved, rejected
-        ]
-    };
-    //#abortControllers = [];
-    /** @type {Map<Specifier, WeakRef<EventTarget>>} */
-    #cache = new Map();
-    /**
-     * 
-     * @param {BAP} self 
-     * @returns 
-     */
-    async hydrate(self) {
-        const { invokeParamSets, enhancedElement } = self;
-        const { nudge } = await import('mount-observer/refid/nudge.js');
-        /** @type Set<string> */
-        const alreadyAdded = new Set();
-        for (const parsedStatement of invokeParamSets) {
-            let { localEventType } = parsedStatement;
-            if (localEventType === undefined) {
-                const { stdEvt } = await import('trans-render/asmr/stdEvt.js');
-                localEventType = stdEvt(enhancedElement);
-            }
-            if(alreadyAdded.has(localEventType)) continue;
-            enhancedElement.addEventListener(localEventType, this);
-            alreadyAdded.add(localEventType);
-        }
-        nudge(enhancedElement);
-        return /** @type {PAP} */ ({
-            resolved: true
-        });
+    constructor(enhancedElement, ctx, initVals){
+        this.init(this, enhancedElement, initVals);
     }
 
     /**
-     * 
+     * @param {AllProps} self 
+     * @param {Element & ElementEnhancementGateway} enhancedElement 
+     * @param {PAP} initVals 
+     */
+    async init(self, enhancedElement, initVals){
+        const {defaultPropVals} = customData;
+        /**
+         * @type {RoundaboutOptions}
+         */
+        const raOptions = {
+            ...customData,
+            vm: self,
+            initialPropVals: {
+                enhancedElement,
+                ...defaultPropVals,
+                ...initVals
+            }
+        };
+        (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+    }
+
+    /** @type {Map<import('./types/do-invoke/types').Specifier, WeakRef<EventTarget>>} */
+    #cache = new Map();
+
+    /**
+     * @param {AP} self 
+     * @returns {Promise<PAP>}
+     */
+    async hydrate(self) {
+        const { rawStatements, enhancedElement } = self;
+        
+        // TODO: Parse rawStatements into invokeParamSets using custom parser
+        // For now, this is a placeholder that needs the custom parser implementation
+        
+        const { nudge } = await import('mount-observer/refid/nudge.js');
+        
+        // Temporary: assume rawStatements is a simple method name
+        const localEventType = 'click'; // Default event type
+        enhancedElement.addEventListener(localEventType, this);
+        
+        nudge(enhancedElement);
+        return {
+            resolved: true
+        };
+    }
+
+    /**
      * @param {Event} e 
      */
     async handleEvent(e){
         const {target} = e;
-        const self = /** @type {BAP & BEAllProps} */ (/** @type {any} */ (this));
-        const { invokeParamSets, enhancedElement } = self;
-        const { find } = await import('trans-render/dss/find.js');
-        for (const parsedStatement of invokeParamSets) {
-            const {remoteSpecifier} = parsedStatement;
-            let remoteTarget = this.#cache.get(remoteSpecifier)?.deref();
-            if (remoteTarget === undefined) {
-                const remoteTargetTest = await find(enhancedElement, remoteSpecifier);
-                if (!remoteTargetTest)
-                    throw 404;
-                remoteTarget = remoteTargetTest;
-                this.#cache.set(remoteSpecifier, new WeakRef(remoteTarget));
-            }
-            let {prop} = remoteSpecifier;
-            const methodName = prop || enhancedElement.getAttribute('name');
-            if(!methodName) throw 404;
-            /** @type {any} */
-            const clone = {};
-            for(const key in e){
-                clone[key] = e[key];
-            }
-            clone.target = target
+        const self = /** @type {AP} */ (/** @type {any} */ (this));
+        const { rawStatements, enhancedElement } = self;
+        
+        // TODO: Use parsed invokeParamSets instead of rawStatements
+        // For now, this is a placeholder
+        
+        const methodName = rawStatements || enhancedElement.getAttribute('name');
+        if (!methodName) return;
+        
+        // Find the host element (itemscope container)
+        let remoteTarget = enhancedElement.closest('[itemscope]');
+        if (!remoteTarget) return;
+        
+        /** @type {any} */
+        const clone = {};
+        for(const key in e){
+            clone[key] = e[key];
+        }
+        clone.target = target;
+        
+        if (typeof remoteTarget[methodName] === 'function') {
             remoteTarget[methodName](remoteTarget, clone);
-            //TODO support path, chained optional accessor
         }
     }
-
-
 }
-await DoInvoke.bootUp();
+
 export { DoInvoke };

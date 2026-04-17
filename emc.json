@@ -1,0 +1,25 @@
+{
+    "enhConfig": {
+        "enhKey": "DoInvoke",
+        "spawn": "do-invoke/do-invoke.js",
+        "withAttrs": {
+            "base": "do-invoke",
+            "rawStatements": "${base}"
+        }
+    },
+    "customData": {
+        "weakRef": {
+            "properties": [
+                "enhancedElement"
+            ]
+        },
+        "actions": {
+            "hydrate": {
+                "ifAllOf": [
+                    "rawStatements",
+                    "enhancedElement"
+                ]
+            }
+        }
+    }
+}

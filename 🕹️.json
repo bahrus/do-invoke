@@ -1,0 +1,10 @@
+{
+    "enhConfig": {
+        "enhKey": "🕹️",
+        "spawn": "do-invoke/do-invoke.js",
+        "withAttrs": {
+            "base": "🕹️",
+            "rawStatements": "${base}"
+        }
+    }
+}
