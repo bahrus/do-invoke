@@ -32,7 +32,7 @@
     "be-hive": "0.1.12",
     "mount-observer": "0.1.30",
     "roundabout-lib": "0.0.7",
-    "nested-regex-groups": "0.0.5"
+    "nested-regex-groups": "0.0.6"
   },
   "devDependencies": {
     "@playwright/test": "1.59.1",
