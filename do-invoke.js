@@ -57,7 +57,8 @@ class DoInvoke {
      * @returns {Promise<PAP>}
      */
     async hydrate(self) {
-        const { rawStatements, enhancedElement } = self;
+        const { invokeParamSets, enhancedElement } = self;
+        console.log({invokeParamSets});
         
         // TODO: Parse rawStatements into invokeParamSets using custom parser
         // For now, this is a placeholder that needs the custom parser implementation

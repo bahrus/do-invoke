@@ -33,7 +33,7 @@
         "actions": {
             "hydrate": {
                 "ifAllOf": [
-                    "rawStatements",
+                    "invokeParamSets",
                     "enhancedElement"
                 ]
             }

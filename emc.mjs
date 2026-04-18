@@ -45,7 +45,7 @@ export const emc = {
         },
         actions: {
             hydrate: {
-                ifAllOf: ['rawStatements', 'enhancedElement']
+                ifAllOf: ['invokeParamSets', 'enhancedElement']
             }
         }
     }
