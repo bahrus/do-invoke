@@ -4,6 +4,22 @@
         "spawn": "do-invoke/do-invoke.js",
         "withAttrs": {
             "base": "do-invoke",
+            "_base": {
+                "parser": "parse-pattern-statements",
+                "instanceOf": "Object",
+                "parserConfig": [
+                    {
+                        "name": "targetsPartOnEventType",
+                        "pattern": "^(?<targetPart>.*) on (?<localEventType>.*)",
+                        "description": "Method/selector with explicit event type"
+                    },
+                    {
+                        "name": "targetsPart",
+                        "pattern": "^(?<targetPart>.*)",
+                        "description": "Method/selector with default event type"
+                    }
+                ]
+            },
             "rawStatements": "${base}"
         }
     },

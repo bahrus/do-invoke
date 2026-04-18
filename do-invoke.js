@@ -62,7 +62,7 @@ class DoInvoke {
         // TODO: Parse rawStatements into invokeParamSets using custom parser
         // For now, this is a placeholder that needs the custom parser implementation
         
-        const { nudge } = await import('mount-observer/refid/nudge.js');
+        const { nudge } = await import('mount-observer/nudge.js');
         
         // Temporary: assume rawStatements is a simple method name
         const localEventType = 'click'; // Default event type

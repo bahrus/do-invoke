@@ -3,7 +3,21 @@
 /** @import {EMC} from './types/mount-observer/types' */;
 /** @import {AllProps, Actions} from './types/do-invoke/types' */
 /** @import {RAConfig} from './types/roundabout/types' */
-/** @import {} from ' */
+/** @import {PatternConfig} from './types/nested-regex-groups/types' */
+
+/** @type {PatternConfig[]} */
+const parsePatterns = [
+    {
+        name: 'targetsPartOnEventType',
+        pattern: String.raw `^(?<targetPart>.*) on (?<localEventType>.*)`,
+        description: 'Method/selector with explicit event type'
+    },
+    {
+        name: 'targetsPart',
+        pattern: String.raw `^(?<targetPart>.*)`,
+        description: 'Method/selector with default event type'
+    }
+]
 
 /**
  * @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions> >}
@@ -14,6 +28,11 @@ export const emc = {
         spawn: 'do-invoke/do-invoke.js',
         withAttrs: {
             base: 'do-invoke',
+            _base: {
+                parser: "parse-pattern-statements",
+                instanceOf: 'Object',
+                parserConfig: parsePatterns
+            },
             // TODO: Custom parser needed for complex attribute parsing
             // For now, using basic string mapping - will need custom parser implementation
             rawStatements: '${base}'
