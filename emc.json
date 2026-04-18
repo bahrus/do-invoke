@@ -5,8 +5,9 @@
         "withAttrs": {
             "base": "do-invoke",
             "_base": {
+                "mapsTo": "invokeParamSets",
                 "parser": "parse-pattern-statements",
-                "instanceOf": "Object",
+                "instanceOf": "Array",
                 "parserConfig": [
                     {
                         "name": "targetsPartOnEventType",

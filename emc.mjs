@@ -29,8 +29,9 @@ export const emc = {
         withAttrs: {
             base: 'do-invoke',
             _base: {
+                mapsTo: 'invokeParamSets',
                 parser: "parse-pattern-statements",
-                instanceOf: 'Object',
+                instanceOf: 'Array',
                 parserConfig: parsePatterns
             },
             // TODO: Custom parser needed for complex attribute parsing
