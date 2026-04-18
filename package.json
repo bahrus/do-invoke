@@ -31,7 +31,8 @@
   "dependencies": {
     "be-hive": "0.1.11",
     "mount-observer": "0.1.28",
-    "roundabout-lib": "0.0.7"
+    "roundabout-lib": "0.0.7",
+    "nested-regex-groups": "0.0.4"
   },
   "devDependencies": {
     "@playwright/test": "1.59.1",
