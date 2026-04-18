@@ -1,5 +1,12 @@
-import {} from 'nested-regex-groups/'
+import {parsePatternStatements as pps} from 'nested-regex-groups/parse-pattern-statements.js';
 
-export default function parsePatternStatements(a, b, c){
-    console.log({a, b, c})
+/**
+ * 
+ * @param {string} value 
+ * @param {*} context 
+ */
+export default function parsePatternStatements(value, context){
+    console.log({value, context});
+    const result = pps(value, context.attrConfig.parserConfig);
+    return result;
 }
