@@ -1,5 +1,5 @@
 // @ts-check
-/** @import {Actions, PAP, AllProps, AP} from './types/do-invoke/types' */;
+/** @import {Actions, PAP, AllProps, AP, InvokingParameters} from './types/do-invoke/types' */;
 /** @import {RoundaboutOptions} from './types/roundabout/types' */;
 /** @import {ElementEnhancementGateway} from './types/assign-gingerly/types' */;
 /** @import {EMC} from './types/mount-observer/types' */;
@@ -13,7 +13,6 @@ const {customData} = emc;
 
 /**
  * @implements {Actions}
- * @implements {EventListenerObject}
  */
 class DoInvoke {
 
@@ -21,7 +20,7 @@ class DoInvoke {
      * @this {AllProps & Actions}
      * @param {Element & ElementEnhancementGateway} enhancedElement 
      * @param {*} ctx 
-     * @param {AllProps} initVals 
+     * @param {PAP} initVals 
      */
     constructor(enhancedElement, ctx, initVals){
         this.init(this, enhancedElement, initVals);
@@ -33,7 +32,7 @@ class DoInvoke {
      * @param {PAP} initVals 
      */
     async init(self, enhancedElement, initVals){
-        const {defaultPropVals} = customData;
+        //const {defaultPropVals} = customData;
         /**
          * @type {RoundaboutOptions}
          */
@@ -42,15 +41,15 @@ class DoInvoke {
             vm: self,
             initialPropVals: {
                 enhancedElement,
-                ...defaultPropVals,
+                //...defaultPropVals,
                 ...initVals
             }
         };
         (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
     }
 
-    /** @type {Map<import('./types/do-invoke/types').Specifier, WeakRef<EventTarget>>} */
-    #cache = new Map();
+    // /** @type {Map<import('./types/do-invoke/types').Specifier, WeakRef<EventTarget>>} */
+    // #cache = new Map();
 
     /**
      * @param {AP} self 
@@ -65,9 +64,13 @@ class DoInvoke {
         
         const { nudge } = await import('mount-observer/nudge.js');
         
-        // Temporary: assume rawStatements is a simple method name
-        const localEventType = 'click'; // Default event type
-        enhancedElement.addEventListener(localEventType, this);
+        for(const invokingParams of invokeParamSets){
+            const {localEventType} = invokingParams;
+            enhancedElement.addEventListener(localEventType, e => {
+                this.handleEvent(self, e, invokingParams);
+            });
+        }
+        
         
         nudge(enhancedElement);
         return {
@@ -76,22 +79,22 @@ class DoInvoke {
     }
 
     /**
+     * @param {AP} self
      * @param {Event} e 
+     * @param {InvokingParameters} invokingParams
      */
-    async handleEvent(e){
-        const {target} = e;
-        const self = /** @type {AP} */ (/** @type {any} */ (this));
-        const { rawStatements, enhancedElement } = self;
+    async handleEvent(self, e, invokingParams){
+        const { enhancedElement } = self;
+    
+        const {targetSpecifier} = invokingParams;
+        const {hostOrPeerMethodName, targetElementId} = targetSpecifier;
+
+        const rn = /** @type {DocumentFragment & {host: unknown}} */ (enhancedElement.getRootNode());
+
+        /** @type {any} */
+        let target = targetElementId ? rn.getElementById(targetElementId) : (enhancedElement.closest('[itemscope]') || rn.host);
+        if(!target) throw 404;
         
-        // TODO: Use parsed invokeParamSets instead of rawStatements
-        // For now, this is a placeholder
-        
-        const methodName = rawStatements || enhancedElement.getAttribute('name');
-        if (!methodName) return;
-        
-        // Find the host element (itemscope container)
-        let remoteTarget = enhancedElement.closest('[itemscope]');
-        if (!remoteTarget) return;
         
         /** @type {any} */
         const clone = {};
@@ -100,8 +103,8 @@ class DoInvoke {
         }
         clone.target = target;
         
-        if (typeof remoteTarget[methodName] === 'function') {
-            remoteTarget[methodName](remoteTarget, clone);
+        if (typeof target[hostOrPeerMethodName] === 'function') {
+            target[hostOrPeerMethodName](target, clone);
         }
     }
 }
