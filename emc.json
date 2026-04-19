@@ -5,33 +5,39 @@
         "withAttrs": {
             "base": "do-invoke",
             "_base": {
-                "mapsTo": "invokeParamSets",
+                "mapsTo": "invokeParamSet",
                 "parser": "parse-pattern-statements",
                 "instanceOf": "Array",
                 "parserConfig": [
                     {
                         "name": "idWithMethodAndEvent",
                         "pattern": "^#(?<targetSpecifier.targetElementId>[^?]+)\\?\\.(?<targetSpecifier.hostOrPeerMethodName>\\w+) on (?<localEventType>\\w+)$",
-                        "description": "Element ID with method and explicit event type: #{{id}}?.method on event"
+                        "description": "Element ID with method and explicit event type: #{{id}}?.method on event",
+                        "defaultVals": {
+                            "localEventType": "click"
+                        }
                     },
                     {
                         "name": "idWithMethod",
                         "pattern": "^#(?<targetSpecifier.targetElementId>[^?]+)\\?\\.(?<targetSpecifier.hostOrPeerMethodName>\\w+)$",
                         "description": "Element ID with method, default event: #{{id}}?.method",
-                        "defaults": {
+                        "defaultVals": {
                             "localEventType": "click"
                         }
                     },
                     {
                         "name": "methodWithEvent",
                         "pattern": "^(?<targetSpecifier.hostOrPeerMethodName>\\w+) on (?<localEventType>\\w+)$",
-                        "description": "Method name with explicit event type: method on event"
+                        "description": "Method name with explicit event type: method on event",
+                        "defaultVals": {
+                            "localEventType": "click"
+                        }
                     },
                     {
                         "name": "methodOnly",
                         "pattern": "^(?<targetSpecifier.hostOrPeerMethodName>\\w+)$",
                         "description": "Method name only, default event: method",
-                        "defaults": {
+                        "defaultVals": {
                             "localEventType": "click"
                         }
                     }
@@ -49,7 +55,7 @@
         "actions": {
             "hydrate": {
                 "ifAllOf": [
-                    "invokeParamSets",
+                    "invokeParamSet",
                     "enhancedElement"
                 ]
             }

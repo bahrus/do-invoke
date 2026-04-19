@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example 1a</title>
+    <title>Example 1a Infer</title>
     <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc-parser src="be-hive/parsers/parse-pattern-statements.js" parser-name=parse-pattern-statements></script>
+        <script type=emc src="do-invoke/🕹️.json" wait-for-parsers=parse-pattern-statements></script>
+    </be-hive>
     <script type=module>
-        import {Mount} from 'xtal-element/index.js';
-        import '/🕹️.js';
-        class MoodStoneBase extends Mount{
+        import 'be-hive/be-hive.js';
+        class MoodStone extends HTMLElement{
             howAmIFeelingAboutToday(targetElement, event){
                 console.log({targetElement, event});
             }
         }
-        customElements.define('mood-stone-base', MoodStoneBase);
+        customElements.define('mood-stone', MoodStone);
     </script>
 </head>
 <body>
     <mood-stone itemscope>
         <button disabled name=howAmIFeelingAboutToday 🕹️>Feeling great</button>
-        <xtal-element inherits=mood-stone-base></xtal-element>
     </mood-stone>
 </body>
 </html>

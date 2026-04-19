@@ -5,33 +5,35 @@
 /** @import {RAConfig} from './types/roundabout/types' */
 /** @import {PatternConfig} from './types/nested-regex-groups/types' */
 
+const defaultVals = {
+    localEventType: 'click'
+};
+
 /** @type {PatternConfig[]} */
 const parsePatterns = [
     {
         name: 'idWithMethodAndEvent',
         pattern: String.raw `^#(?<targetSpecifier.targetElementId>[^?]+)\?\.(?<targetSpecifier.hostOrPeerMethodName>\w+) on (?<localEventType>\w+)$`,
-        description: 'Element ID with method and explicit event type: #{{id}}?.method on event'
+        description: 'Element ID with method and explicit event type: #{{id}}?.method on event',
+        defaultVals,
     },
     {
         name: 'idWithMethod',
         pattern: String.raw `^#(?<targetSpecifier.targetElementId>[^?]+)\?\.(?<targetSpecifier.hostOrPeerMethodName>\w+)$`,
         description: 'Element ID with method, default event: #{{id}}?.method',
-        defaults: {
-            localEventType: 'click'
-        }
+        defaultVals,
     },
     {
         name: 'methodWithEvent',
         pattern: String.raw `^(?<targetSpecifier.hostOrPeerMethodName>\w+) on (?<localEventType>\w+)$`,
-        description: 'Method name with explicit event type: method on event'
+        description: 'Method name with explicit event type: method on event',
+        defaultVals,
     },
     {
         name: 'methodOnly',
         pattern: String.raw `^(?<targetSpecifier.hostOrPeerMethodName>\w+)$`,
         description: 'Method name only, default event: method',
-        defaults: {
-            localEventType: 'click'
-        }
+        defaultVals,
     }
 ]
 
@@ -45,7 +47,7 @@ export const emc = {
         withAttrs: {
             base: 'do-invoke',
             _base: {
-                mapsTo: 'invokeParamSets',
+                mapsTo: 'invokeParamSet',
                 parser: "parse-pattern-statements",
                 instanceOf: 'Array',
                 parserConfig: parsePatterns
@@ -61,7 +63,7 @@ export const emc = {
         },
         actions: {
             hydrate: {
-                ifAllOf: ['invokeParamSets', 'enhancedElement']
+                ifAllOf: ['invokeParamSet', 'enhancedElement']
             }
         }
     }

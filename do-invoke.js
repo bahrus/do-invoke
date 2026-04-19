@@ -56,22 +56,37 @@ class DoInvoke {
      * @returns {Promise<PAP>}
      */
     async hydrate(self) {
-        const { invokeParamSets, enhancedElement } = self;
-        console.log({invokeParamSets});
+        const { invokeParamSet, enhancedElement } = self;
+        console.log({invokeParamSet});
+        const {statements, success} = invokeParamSet;
+        if(!success) throw 400;
         
         // TODO: Parse rawStatements into invokeParamSets using custom parser
         // For now, this is a placeholder that needs the custom parser implementation
         
         const { nudge } = await import('mount-observer/nudge.js');
-        
-        for(const invokingParams of invokeParamSets){
-            const {localEventType} = invokingParams;
+        if(statements.length === 0){
+            const name = enhancedElement.getAttribute('name');
+            if(!name) throw 400;
+            statements.push({
+                value: {
+                    localEventType: 'click',
+                    targetSpecifier: {
+                        hostOrPeerMethodName: name
+                    }
+                }
+            })
+        }
+        for(const invokingParams of statements){
+            const {value} = invokingParams;
+            if(!value) continue;
+            const {localEventType} = value;
             enhancedElement.addEventListener(localEventType, e => {
-                this.handleEvent(self, e, invokingParams);
+                this.handleEvent(self, e, value);
             });
         }
-        
-        
+
+
         nudge(enhancedElement);
         return {
             resolved: true
