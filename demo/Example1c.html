@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example 1c</title>
+    <title>Example 1c - Dynamic IDs</title>
     <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc-parser src="be-hive/parsers/parse-pattern-statements.js" parser-name=parse-pattern-statements></script>
+        <script type=emc src="do-invoke/🕹️.json" wait-for-parsers=parse-pattern-statements></script>
+    </be-hive>
     <script type=module>
-        import {Mount} from 'xtal-element/index.js';
-        import '/🕹️.js';
-        class SoulSearchingBase extends Mount{
+        import 'be-hive/be-hive.js';
+        class SoulSearching extends HTMLElement{
             engage(targetElement, event){
                 console.log({targetElement, event});
             }
         }
-        customElements.define('soul-searching-base', SoulSearchingBase);
+        customElements.define('soul-searching', SoulSearching);
     </script>
 </head>
 <body>
-    <mood-stone>
-        <soul-searching #>
-            <xtal-element
-                inherits=soul-searching-base
-            ></xtal-element>
-        </soul-searching>
-        <button defer-🕹️ 🕹️=#{{soul-searching}}?.engage>What have I done?</button>
-        <xtal-element -id></xtal-element>
+    <mood-stone itemscope>
+        <soul-searching #></soul-searching>
+        <button disabled -id defer-🕹️ 🕹️=#{{soul-searching}}?.engage>What have I done?</button>
     </mood-stone>
 </body>
 </html>
