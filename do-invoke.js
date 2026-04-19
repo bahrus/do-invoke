@@ -107,7 +107,7 @@ class DoInvoke {
         const rn = /** @type {DocumentFragment & {host: unknown}} */ (enhancedElement.getRootNode());
 
         /** @type {any} */
-        let target = targetElementId ? rn.getElementById(targetElementId) : (enhancedElement.closest('[itemscope]') || rn.host);
+        const target = targetElementId ? rn.getElementById(targetElementId) : (enhancedElement.closest('[itemscope]') || rn.host);
         if(!target) throw 404;
         
         
