@@ -1,7 +1,7 @@
 // @ts-check
 /** @import {Actions, PAP, AllProps, AP, InvokingParameters} from './types/do-invoke/types' */;
 /** @import {RoundaboutOptions} from './types/roundabout/types' */;
-/** @import {ElementEnhancementGateway} from './types/assign-gingerly/types' */;
+/** @import {ElementEnhancementGateway, ElementInfer} from './types/assign-gingerly/types' */;
 /** @import {EMC} from './types/mount-observer/types' */;
 /** @import {RAConfig} from './types/roundabout/types' */;
 /**
@@ -52,7 +52,7 @@ class DoInvoke {
     // #cache = new Map();
 
     /**
-     * @param {AP} self 
+     * @param {AP & Actions & ElementEnhancementGateway} self 
      * @returns {Promise<PAP>}
      */
     async hydrate(self) {
@@ -68,9 +68,10 @@ class DoInvoke {
         if(statements.length === 0){
             const name = enhancedElement.getAttribute('name');
             if(!name) throw 400;
+            const inference = await infer(enhancedElement);
             statements.push({
                 value: {
-                    localEventType: 'click',
+                    localEventType: inference.eventType,
                     targetSpecifier: {
                         hostOrPeerMethodName: name
                     }
@@ -80,7 +81,10 @@ class DoInvoke {
         for(const invokingParams of statements){
             const {value} = invokingParams;
             if(!value) continue;
-            const {localEventType} = value;
+            let {localEventType} = value;
+            if(!localEventType){
+                localEventType = (await infer(enhancedElement)).eventType;
+            }
             enhancedElement.addEventListener(localEventType, e => {
                 this.handleEvent(self, e, value);
             });
@@ -123,5 +127,11 @@ class DoInvoke {
         }
     }
 }
+
+/**
+ * 
+ * @param {Element & ElementEnhancementGateway} from 
+ */
+async function infer(from){return /** @type {ElementInfer} */ (/** @type {any} */ (from.enh.get((await import('assign-gingerly/Infer.js')).registryItem)));}
 
 export { DoInvoke };
