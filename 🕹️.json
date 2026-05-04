@@ -45,5 +45,20 @@
             },
             "rawStatements": "${base}"
         }
+    },
+    "customData": {
+        "weakRef": {
+            "properties": [
+                "enhancedElement"
+            ]
+        },
+        "actions": {
+            "hydrate": {
+                "ifAllOf": [
+                    "invokeParamSet",
+                    "enhancedElement"
+                ]
+            }
+        }
     }
 }

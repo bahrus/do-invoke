@@ -1,15 +1,13 @@
 // @ts-check
 /** @import {Actions, PAP, AllProps, AP, InvokingParameters} from './types/do-invoke/types' */;
 /** @import {RoundaboutOptions} from './types/roundabout/types' */;
-/** @import {ElementEnhancementGateway, ElementInfer} from './types/assign-gingerly/types' */;
+/** @import {ElementEnhancementGateway, ElementInfer, SpawnContext} from './types/assign-gingerly/types' */;
 /** @import {EMC} from './types/mount-observer/types' */;
 /** @import {RAConfig} from './types/roundabout/types' */;
 /**
  * @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>}
  */
-import emc from './emc.json' with {type: 'json'};
 
-const {customData} = emc;
 
 /**
  * @implements {Actions}
@@ -19,20 +17,21 @@ class DoInvoke {
     /**
      * @this {AllProps & Actions}
      * @param {Element & ElementEnhancementGateway} enhancedElement 
-     * @param {*} ctx 
+     * @param {SpawnContext} ctx 
      * @param {PAP} initVals 
      */
     constructor(enhancedElement, ctx, initVals){
-        this.init(this, enhancedElement, initVals);
+        this.init(this, enhancedElement, ctx, initVals);
     }
 
     /**
      * @param {AllProps} self 
      * @param {Element & ElementEnhancementGateway} enhancedElement 
+     * @param {SpawnContext} ctx 
      * @param {PAP} initVals 
      */
-    async init(self, enhancedElement, initVals){
-        //const {defaultPropVals} = customData;
+    async init(self, enhancedElement, ctx, initVals){
+        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc);
         /**
          * @type {RoundaboutOptions}
          */
@@ -57,7 +56,6 @@ class DoInvoke {
      */
     async hydrate(self) {
         const { invokeParamSet, enhancedElement } = self;
-        console.log({invokeParamSet});
         const {statements, success} = invokeParamSet;
         if(!success) throw 400;
         
