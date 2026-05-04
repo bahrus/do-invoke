@@ -21,13 +21,12 @@ Another enhancement, [be-modding](https://github.com/bahrus/be-modding), takes a
 
 ```html
 <script type=module>
-    import {Mount} from 'xtal-element/index.js';
-    class MoodStoneBase extends Mount{
-        howAmIFeelingAboutToday(targetElement, event){
-            console.log({targetElement, event});
-        }
+class MoodStone extends HTMLElement{
+    howAmIFeelingAboutToday(targetElement, event){
+        console.log({targetElement, event});
     }
-    customElements.define('mood-stone-base', MoodStoneBase);
+}
+customElements.define('mood-stone', MoodStone);
 </script>
 ...
 <mood-stone itemscope>
@@ -40,7 +39,7 @@ What this does:
 
 1.  Removes the disabled attribute after hydrating.
 2.  Listens by default for "click" events in this case.
-3.  Invokes host-element's howAmIFeelingToday method only when the button dispatches "click" event.
+3.  Invokes the host element's howAmIFeelingToday method only when the button dispatches "click" event.
 
 It passes in two arguments:  
 
@@ -83,25 +82,21 @@ To specify a different event to act on:
 
 ## Example 1c Specifying a peer element
 
+In the following, we take advantage of the [automatic id generation](https://github.com/bahrus/id-generation) that is supported by the underlying standards polyfill that this package rest on.
+
 ```html
 <script type=module>
-    import {Mount} from 'xtal-element/index.js';
-    import '/🕹️.js';
-    class SoulSearchingBase extends Mount{
-        engage(targetElement, event){
-            console.log({targetElement, event});
-        }
+class SoulSearching extends HTMLElement{
+    engage(targetElement, event){
+        console.log({targetElement, event});
     }
-    customElements.define('soul-searching-base', SoulSearchingBase);
+}
+customElements.define('soul-searching', SoulSearching);
 </script>
 ...
 
 <mood-stone itemscope>
-    <soul-searching #>
-        <xtal-element
-            inherits=soul-searching-base
-        ></xtal-element>
-    </soul-searching>
+    <soul-searching #></soul-searching>
     <button 🕹️="#{{soul-searching}}?.engage">What have I done?</button>
     <xtal-element -id></xtal-element>
 </mood-stone>
