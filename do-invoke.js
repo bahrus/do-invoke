@@ -1,7 +1,8 @@
 // @ts-check
 /** @import {Actions, PAP, AllProps, AP, InvokingParameters} from './types/do-invoke/types' */;
 /** @import {RoundaboutOptions} from './types/roundabout/types' */;
-/** @import {ElementEnhancementGateway, ElementInfer, SpawnContext} from './types/assign-gingerly/types' */;
+/** @import {ElementEnhancementGateway, SpawnContext} from './types/assign-gingerly/types' */;
+/** @import {Infer} from './types/inferencer/types' */
 /** @import {EMC} from './types/mount-observer/types' */;
 /** @import {RAConfig} from './types/roundabout/types' */;
 /**
@@ -130,6 +131,6 @@ class DoInvoke {
  * 
  * @param {Element & ElementEnhancementGateway} from 
  */
-async function infer(from){return /** @type {ElementInfer} */ (/** @type {any} */ (from.enh.get((await import('assign-gingerly/Infer.js')).registryItem)));}
+async function infer(from){return /** @type {Infer} */ (/** @type {any} */ (from.enh.get((await import('inferencer/inferencer.js')).registryItem)));}
 
 export { DoInvoke };

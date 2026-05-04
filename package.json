@@ -31,6 +31,7 @@
   "dependencies": {
     "assign-gingerly": "0.0.38",
     "be-hive": "0.1.13",
+    "inferencer": "0.0.1",
     "mount-observer": "0.1.36",
     "roundabout-lib": "0.0.10",
     "nested-regex-groups": "0.0.6"
