@@ -5,16 +5,14 @@ Invoke method on upstream peer element or the host.
 > [!NOTE]
 > This element enhancement took some inspiration from the original form that [the invoker commands proposal adopted](https://open-ui.org/components/invokers.explainer/) as well as [countless frameworks](https://knockoutjs.com/documentation/click-binding.html).  Once that becomes built into the platform (hopefully), definitely consider adopting that built-in technique before using this as a last resort.
 
-## Other alternatives
+## Alternatives
 
-This enhancement allows us to only specify the name of a method to invoke from the host or peer element, optionally based on some explicitly defined event.  After it invokes the method, this enhancement simply punts.  I.e. all the logic for actually doing anything must be fully defined within the method.
+do-merge covers most of the same ground as [do-invoke](https://github.com/bahrus/do-invoke), [do-inc](https://github.com/bahrus/do-inc), and [do-toggle](https://github.com/bahrus/do-toggle). The key differences:
 
-Another enhancement, [be-modding](https://github.com/bahrus/be-modding), takes a more active role in managing what happens.
+- **do-invoke**, **do-inc**, and **do-toggle** use a string DSL (no JSON required) and include inferencing logic — they can figure out the event type, target property, etc. from context, so you can often be less explicit. The intent is arguably more obvious at a glance for their specific use cases.
+- **do-merge** uses JSON syntax and the full power of [assign-gingerly](https://github.com/bahrus/assign-gingerly) operators (`=!` for toggle, `+=` for increment, method calls via `?.classList?.add`, etc.). It's more general-purpose — a single enhancement that can handle toggling, incrementing, method invocation, and arbitrary property assignment in one attribute.
 
-[![NPM version](https://badge.fury.io/js/do-invoke.png)](http://badge.fury.io/js/do-invoke)
-[![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/do-invoke?style=for-the-badge)](https://bundlephobia.com/result?p=do-invoke)
-<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/do-invoke?compression=gzip">
-[![Playwright Tests](https://github.com/bahrus/do-invoke/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/do-invoke/actions/workflows/CI.yml)
+Choose do-merge when you need to combine multiple operations or want the full expressiveness of assign-gingerly. Choose the specialized enhancements like *do-invoke* when brevity and self-documenting intent matter more.
 
 ## Example 1a Invoking a host method on most common event (depending on context)
 
