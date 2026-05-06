@@ -110,9 +110,10 @@ Any web server that can serve static files will do, but...
 2.  Fork/clone this repo.
 3.  Install node.js.
 4.  Open command window to folder where you cloned this repo.
-5.  > npm install
-6.  > npm run serve
-7.  Open http://localhost:8000/demo/ in a modern browser.
+5.  > git submodule update --init --recursive
+6.  > npm install
+7.  > npm run serve
+8.  Open http://localhost:8000/demo/ in a modern browser.
 
 ## Running Tests
 
