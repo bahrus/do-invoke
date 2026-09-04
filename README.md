@@ -14,11 +14,27 @@ Invoke method on upstream peer element or the host.
 
 Choose do-merge when you need to combine multiple operations or want the full expressiveness of assign-gingerly. Choose the specialized enhancements like *do-invoke* when brevity and self-documenting intent matter more.
 
+## Setup
+
+All the examples below assume the enhancement has been registered via [be-hive](https://github.com/bahrus/be-hive) and that an import map is in scope (see [imports.html](https://github.com/bahrus/do-invoke/blob/baseline/imports.html)):
+
+```html
+<!-- #include virtual="/imports.html" -->
+<be-hive>
+    <script type=emc-parser src="be-hive/parsers/parse-pattern-statements.js" parser-name=parse-pattern-statements></script>
+    <script type=emc src="do-invoke/🕹️.json" wait-for-parsers=parse-pattern-statements></script>
+</be-hive>
+<script type=module>
+    import 'be-hive/be-hive.js';
+</script>
+```
+
 ## Example 1a Invoking a host method on most common event (depending on context)
 
 
 ```html
 <script type=module>
+import 'be-hive/be-hive.js';
 class MoodStone extends HTMLElement{
     howAmIFeelingAboutToday(targetElement, event){
         console.log({targetElement, event});
@@ -28,42 +44,41 @@ customElements.define('mood-stone', MoodStone);
 </script>
 ...
 <mood-stone itemscope>
-    <button disabled 🕹️=howAmIFeelingAboutToday>Feeling great</button>
-    <xtal-element inherits=mood-stone-base></xtal-element>
+    <button 🕹️=howAmIFeelingAboutToday>Feeling great</button>
 </mood-stone>
 ```
 
 What this does:
 
-1.  Removes the disabled attribute after hydrating.
-2.  Listens by default for "click" events in this case.
-3.  Invokes the host element's howAmIFeelingToday method only when the button dispatches "click" event.
+1.  Listens by default for "click" events in this case.
+2.  Invokes the host element's howAmIFeelingAboutToday method only when the button dispatches a "click" event.
+
+If the triggering element carries a `disabled` attribute (as in [Example 1a with inference](#example-1a-with-inference) and [Example 1c](#example-1c-specifying-a-peer-element)), it is removed once the enhancement hydrates.
 
 It passes in two arguments:  
 
 1.  The instance of whatever element is being invoked, just in case that is helpful.
 2.  The event that triggered the action. 
 
-Note that the name of this package, "do-invoke" is the canonical name of this element enhancement.  It is a bit long, but benefits from making the markup somewhat self-explanatory.  It is easy to choose your own name, as demonstrated by [this file](https://github.com/bahrus/do-invoke/blob/baseline/%F0%9F%95%B9%EF%B8%8F.ts).
+Note that the name of this package, "do-invoke" is the canonical name of this element enhancement.  It is a bit long, but benefits from making the markup somewhat self-explanatory.  It is easy to choose your own name, as demonstrated by [this file](https://github.com/bahrus/do-invoke/blob/baseline/%F0%9F%95%B9%EF%B8%8F.mjs).
 
 ## Example 1a with inference
 
-We can infer the name of the method to invoke from the name attribute of the element *do-invoke* adorns:
+We can infer the name of the method to invoke from the name attribute of the element *do-invoke* adorns.  Here the `🕹️` attribute is left empty, so the method name comes from `name` and the event type ("click") is inferred from the element (a `<button>`):
 
 ```html
 <script type=module>
-    import {Mount} from 'xtal-element/index.js';
-    class MoodStoneBase extends Mount{
+    import 'be-hive/be-hive.js';
+    class MoodStone extends HTMLElement{
         howAmIFeelingAboutToday(targetElement, event){
             console.log({targetElement, event});
         }
     }
-    customElements.define('mood-stone-base', MoodStoneBase);
+    customElements.define('mood-stone', MoodStone);
 </script>
 ...
 <mood-stone itemscope>
     <button disabled name=howAmIFeelingAboutToday 🕹️>Feeling great</button>
-    <xtal-element inherits=mood-stone-base></xtal-element>
 </mood-stone>
 ```
 
@@ -74,7 +89,6 @@ To specify a different event to act on:
 ```html
 <mood-stone itemscope>
     <button 🕹️="howAmIFeelingAboutToday on mouseover">Feeling great</button>
-    <xtal-element inherits=mood-stone-base></xtal-element>
 </mood-stone>
 ```
 
@@ -84,6 +98,7 @@ In the following, we take advantage of the [automatic id generation](https://git
 
 ```html
 <script type=module>
+import 'be-hive/be-hive.js';
 class SoulSearching extends HTMLElement{
     engage(targetElement, event){
         console.log({targetElement, event});
@@ -95,8 +110,7 @@ customElements.define('soul-searching', SoulSearching);
 
 <mood-stone itemscope>
     <soul-searching #></soul-searching>
-    <button 🕹️="#{{soul-searching}}?.engage">What have I done?</button>
-    <xtal-element -id></xtal-element>
+    <button disabled -id defer-🕹️ 🕹️=#{{soul-searching}}?.engage>What have I done?</button>
 </mood-stone>
 ```
 
@@ -137,20 +151,19 @@ import 'do-invoke/do-invoke.js';
 </script>
 ```
 
-[or](https://generator.jspm.io)
+or provide an import map that resolves do-invoke and its dependencies (mirrors [imports.html](https://github.com/bahrus/do-invoke/blob/baseline/imports.html)):
 
 ```html
 <script type="importmap">
 {
-"imports": {
-    "do-invoke": "https://ga.jspm.io/npm:do-invoke@0.0.5/do-invoke.js"
-},
-"scopes": {
-    "https://ga.jspm.io/": {
-    "be-enhanced/": "https://ga.jspm.io/npm:be-enhanced@0.0.163/",
-    "trans-render/": "https://ga.jspm.io/npm:trans-render@0.0.876/"
+    "imports": {
+        "do-invoke/": "https://esm.sh/do-invoke/",
+        "assign-gingerly/": "https://esm.sh/assign-gingerly/",
+        "be-hive/": "https://esm.sh/be-hive/",
+        "mount-observer/": "https://esm.sh/mount-observer/",
+        "nested-regex-groups/": "https://esm.sh/nested-regex-groups/",
+        "roundabout-lib/": "https://esm.sh/roundabout-lib/"
     }
-}
 }
 </script>
 ```
