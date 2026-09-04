@@ -42,7 +42,7 @@ const parsePatterns = [
  */
 export const emc = {
     enhConfig: {
-        enhKey: 'DoInvoke',
+        enhKey: 'doInvoke',
         spawn: 'do-invoke/do-invoke.js',
         withAttrs: {
             base: 'do-invoke',
