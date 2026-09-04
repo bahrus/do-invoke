@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1a (test)</title>
+    <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc-parser src="be-hive/parsers/parse-pattern-statements.js" parser-name=parse-pattern-statements></script>
+        <script type=emc src="do-invoke/🕹️.json" wait-for-parsers=parse-pattern-statements></script>
+    </be-hive>
+    <script type=module>
+        import 'be-hive/be-hive.js';
+        // Mirrors demo/Example1a.html, but records each invocation so the
+        // Playwright spec can assert the host method actually ran.
+        class MoodStone extends HTMLElement{
+            howAmIFeelingAboutToday(targetElement, event){
+                this.__invokeCount = (this.__invokeCount || 0) + 1;
+                this.__lastTarget = targetElement;
+                this.__lastEventType = event && event.type;
+                this.setAttribute('data-invoke-count', String(this.__invokeCount));
+                console.log({targetElement, event});
+            }
+        }
+        customElements.define('mood-stone', MoodStone);
+    </script>
+</head>
+<body>
+    <mood-stone itemscope>
+        <button 🕹️=howAmIFeelingAboutToday>Feeling great</button>
+    </mood-stone>
+</body>
+</html>

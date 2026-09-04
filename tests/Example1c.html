@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1c - Dynamic IDs (test)</title>
+    <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc-parser src="be-hive/parsers/parse-pattern-statements.js" parser-name=parse-pattern-statements></script>
+        <script type=emc src="do-invoke/🕹️.json" wait-for-parsers=parse-pattern-statements></script>
+    </be-hive>
+    <script type=module>
+        import 'be-hive/be-hive.js';
+        // Mirrors demo/Example1c.html: the statement targets a sibling element by
+        // id (#{{soul-searching}}?.engage) rather than the itemscope host.
+        class SoulSearching extends HTMLElement{
+            engage(targetElement, event){
+                this.__invokeCount = (this.__invokeCount || 0) + 1;
+                this.__lastTarget = targetElement;
+                this.__lastEventType = event && event.type;
+                this.setAttribute('data-invoke-count', String(this.__invokeCount));
+                console.log({targetElement, event});
+            }
+        }
+        customElements.define('soul-searching', SoulSearching);
+    </script>
+</head>
+<body>
+    <mood-stone itemscope>
+        <soul-searching #></soul-searching>
+        <button disabled -id defer-🕹️ 🕹️=#{{soul-searching}}?.engage>What have I done?</button>
+    </mood-stone>
+</body>
+</html>

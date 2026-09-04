@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1a Infer (test)</title>
+    <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc-parser src="be-hive/parsers/parse-pattern-statements.js" parser-name=parse-pattern-statements></script>
+        <script type=emc src="do-invoke/🕹️.json" wait-for-parsers=parse-pattern-statements></script>
+    </be-hive>
+    <script type=module>
+        import 'be-hive/be-hive.js';
+        // Mirrors demo/Example1aInfer.html: no statement in the 🕹️ attribute, so
+        // the method name is taken from the `name` attribute and the event type
+        // is inferred (button => click).
+        class MoodStone extends HTMLElement{
+            howAmIFeelingAboutToday(targetElement, event){
+                this.__invokeCount = (this.__invokeCount || 0) + 1;
+                this.__lastTarget = targetElement;
+                this.__lastEventType = event && event.type;
+                this.setAttribute('data-invoke-count', String(this.__invokeCount));
+                console.log({targetElement, event});
+            }
+        }
+        customElements.define('mood-stone', MoodStone);
+    </script>
+</head>
+<body>
+    <mood-stone itemscope>
+        <button disabled name=howAmIFeelingAboutToday 🕹️>Feeling great</button>
+    </mood-stone>
+</body>
+</html>
