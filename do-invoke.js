@@ -63,7 +63,7 @@ class DoInvoke {
         // TODO: Parse rawStatements into invokeParamSets using custom parser
         // For now, this is a placeholder that needs the custom parser implementation
         
-        const { nudge } = await import('mount-observer/nudge.js');
+        const { nudge } = await import('assign-gingerly/handlers/nudge.js');
         if(statements.length === 0){
             const name = enhancedElement.getAttribute('name');
             if(!name) throw 400;
@@ -107,7 +107,7 @@ class DoInvoke {
         const {targetSpecifier} = invokingParams;
         const {hostOrPeerMethodName, targetElementId} = targetSpecifier;
 
-        const target = /** @type {any} */ (await ((await import('inferencer/upSearch.js')).upSearch(enhancedElement, targetElementId)));
+        const target = /** @type {any} */ (await ((await import('assign-gingerly/inferencer/upSearch.js')).upSearch(enhancedElement, targetElementId)));
         
         
         /** @type {any} */
@@ -127,6 +127,6 @@ class DoInvoke {
  * 
  * @param {Element & ElementEnhancementGateway} from 
  */
-async function infer(from){return /** @type {Infer} */ (/** @type {any} */ (from.enh.get((await import('inferencer/inferencer.js')).registryItem)));}
+async function infer(from){return /** @type {Infer} */ (/** @type {any} */ (from.enh.get((await import('assign-gingerly/inferencer/inferencer.js')).registryItem)));}
 
 export { DoInvoke };

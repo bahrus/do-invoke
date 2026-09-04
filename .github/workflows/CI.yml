@@ -5,13 +5,10 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v5
       with:
-        python-version: '3.12'
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '18.x'
+        node-version: '24.x'
         cache: 'npm'
         cache-dependency-path: package-lock.json
     - name: Install dependencies
@@ -20,4 +17,13 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npm run test
+    - name: Upload Playwright report
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: |
+          playwright-report/
+          test-results/
+        retention-days: 7
       

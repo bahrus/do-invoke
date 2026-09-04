@@ -22,8 +22,8 @@ Timeout:  5000ms
 Call log:
   - Expect "toHaveAttribute" with timeout 5000ms
   - waiting for locator('#target')
-    8 × locator resolved to <div id="target"></div>
-      - unexpected value "null"
+    14 × locator resolved to <div id="target"></div>
+       - unexpected value "null"
 
 ```
 
