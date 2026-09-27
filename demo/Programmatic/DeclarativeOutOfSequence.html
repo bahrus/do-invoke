@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic declarative out of sequence</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <soul-searcher id=soulSearcher></soul-searcher>
+    <mood-stone itemscope>
+        <button id=button name=howAmIFeelingAboutToday>Feeling great</button>
+    </mood-stone>
+    <script type=module>
+        // Each method counts its calls in a data- attribute, to make them visible.
+        const count = (el, key) => el.dataset[key] = String(Number(el.dataset[key] ?? 0) + 1);
+        customElements.define('mood-stone', class extends HTMLElement {
+            howAmIFeelingAboutToday(self, e){ count(this, 'feelings'); }
+            changeOfHeart(self, e){ count(this, 'changes'); }
+        });
+        customElements.define('soul-searcher', class extends HTMLElement {
+            engageInSecondGuessing(self, e){ count(this, 'secondGuesses'); }
+        });
+    </script>
+    <script type=module>
+        import {defDoInvoke} from '/def.js';
+        // set before the config is registered -- the spawn is deferred until defDoInvoke runs.
+        // equivalent to <button name=howAmIFeelingAboutToday do-invoke> -- method from the name attribute
+        button.enh.set.doInvoke.invocations = [];
+        await defDoInvoke(document.body);
+    </script>
+</body>
+</html>

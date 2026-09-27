@@ -52,11 +52,19 @@
                 "enhancedElement"
             ]
         },
+        "compacts": {
+            "when_invokeParamSet_changes_call_onInvokeParamSetChange": 0
+        },
         "actions": {
             "hydrate": {
+                "ifKeyIn": [
+                    "invocations",
+                    "initialized"
+                ],
                 "ifAllOf": [
-                    "invokeParamSet",
-                    "enhancedElement"
+                    "invocations",
+                    "enhancedElement",
+                    "initialized"
                 ]
             }
         }

@@ -61,9 +61,16 @@ export const emc = {
         weakRef: {
             properties: ['enhancedElement']
         },
+        // Transfers the attribute-parsed `invokeParamSet` into `invocations` —
+        // the property `hydrate` actually reads. Programmatic callers skip
+        // `invokeParamSet` entirely and assign `invocations` directly.
+        compacts: {
+            when_invokeParamSet_changes_call_onInvokeParamSetChange: 0
+        },
         actions: {
             hydrate: {
-                ifAllOf: ['invokeParamSet', 'enhancedElement']
+                ifKeyIn: ['invocations', 'initialized'],
+                ifAllOf: ['invocations', 'enhancedElement', 'initialized']
             }
         }
     }
