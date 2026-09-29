@@ -76,6 +76,12 @@ class DoInvoke {
      */
     async hydrate(self) {
         const { invocations, enhancedElement } = self;
+        // A targetElement passed as an element must not be held strongly --
+        // not even via the invocations value roundabout stores on this instance.
+        // Replace it with a weakened copy; that re-triggers hydrate, which
+        // then finds nothing left to weaken and attaches the listeners.
+        const weakened = weakenTargetElements(invocations);
+        if(weakened !== undefined) return /** @type {PAP} */ ({invocations: weakened});
         const { nudge } = await import('assign-gingerly/handlers/nudge.js');
         // Re-hydrating (invocations reassigned) replaces the listeners from
         // the previous pass rather than stacking on them.
@@ -107,9 +113,17 @@ class DoInvoke {
         const { enhancedElement } = self;
     
         const {targetSpecifier} = invokingParams;
-        const {hostOrPeerMethodName, targetElementId} = targetSpecifier;
+        const {hostOrPeerMethodName, targetElementId, targetElement} = targetSpecifier;
 
-        const target = /** @type {any} */ (await ((await import('assign-gingerly/inferencer/upSearch.js')).upSearch(enhancedElement, targetElementId)));
+        /** @type {any} */
+        let target;
+        if(targetElement !== undefined){
+            // By now a WeakRef -- see weakenTargetElements
+            target = targetElement.deref();
+            if(target === undefined) return; // the target has been garbage collected
+        }else{
+            target = await ((await import('assign-gingerly/inferencer/upSearch.js')).upSearch(enhancedElement, targetElementId));
+        }
         
         
         /** @type {any} */
@@ -142,7 +156,7 @@ function toRules(invocations, enhancedElement){
     return items.map(item => {
         /** @type {any} */
         const inv = typeof item === 'string' ? {hostOrPeerMethodName: item} : item;
-        const {targetSpecifier, hostOrPeerMethodName, targetElementId, localEventType} = inv;
+        const {targetSpecifier, hostOrPeerMethodName, targetElementId, targetElement, localEventType} = inv;
         const methodName = targetSpecifier?.hostOrPeerMethodName ?? hostOrPeerMethodName
             ?? enhancedElement.getAttribute('name');
         if(!methodName) throw 400;
@@ -151,9 +165,33 @@ function toRules(invocations, enhancedElement){
             targetSpecifier: {
                 hostOrPeerMethodName: methodName,
                 targetElementId: targetSpecifier?.targetElementId ?? targetElementId,
+                // a WeakRef by now -- see weakenTargetElements
+                targetElement: targetSpecifier?.targetElement ?? targetElement,
             }
         };
     });
+}
+
+/**
+ * If any flat rule's `targetElement` is an element (rather than a WeakRef),
+ * return a copy of `invocations` -- same shape -- with each such element
+ * wrapped in a WeakRef.  Otherwise return undefined.  Never mutates
+ * `invocations`.
+ * @param {Invocations} invocations
+ * @returns {Invocations | undefined}
+ */
+function weakenTargetElements(invocations){
+    const arr = Array.isArray(invocations) ? invocations : [invocations];
+    let found = false;
+    const weakened = arr.map(item => {
+        if(typeof item === 'object' && item !== null && 'targetElement' in item && item.targetElement instanceof Element){
+            found = true;
+            return {...item, targetElement: new WeakRef(item.targetElement)};
+        }
+        return item;
+    });
+    if(!found) return undefined;
+    return Array.isArray(invocations) ? weakened : weakened[0];
 }
 
 /**

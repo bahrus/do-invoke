@@ -166,6 +166,19 @@ button.enh.get(emc).invocations = [
 
 Reassigning `invocations` (e.g. when a framework re-renders with new props) replaces the listeners from the previous value rather than adding more.
 
+### Targeting an element directly
+
+Instead of `targetElementId`, a rule can name the peer whose method to call by reference, via `targetElement`:  either the element itself, or a `WeakRef` to it.  Handy when the peer has no id, or when a framework already holds a reference to it.
+
+```JS
+button.enh.get(emc).invocations = [
+    {hostOrPeerMethodName: 'engageInSecondGuessing', targetElement: soulSearcher},              // an element...
+    {hostOrPeerMethodName: 'engageInSecondGuessing', targetElement: new WeakRef(otherSearcher)}, // ...or a WeakRef to one
+];
+```
+
+Either way, the enhancement only ever holds the target **weakly** -- an element is swapped for a `WeakRef` as soon as the enhancement sees it, including in the stored property value (your own object isn't modified).  So it never keeps a removed element alive; if one is garbage collected, it's simply skipped.  (Your own code may of course still hold it strongly -- that's up to you.)
+
 See [demo/Programmatic](demo/Programmatic/) for runnable examples.
 
 

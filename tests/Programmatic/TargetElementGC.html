@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic do-invoke targetElement GC</title>
+    <!-- #include virtual="/imports.html" -->
+
+</head>
+<body>
+    <mood-stone itemscope>
+        <soul-searcher id=kitchen></soul-searcher>
+        <soul-searcher id=porch></soul-searcher>
+        <button id=button>Feeling great</button>
+    </mood-stone>
+    <script type=module>
+        // Each method counts its calls in a data- attribute, to make them visible.
+        const count = (el, key) => el.dataset[key] = String(Number(el.dataset[key] ?? 0) + 1);
+        customElements.define('mood-stone', class extends HTMLElement {
+            howAmIFeelingAboutToday(self, e){ count(this, 'feelings'); }
+        });
+        customElements.define('soul-searcher', class extends HTMLElement {
+            engageInSecondGuessing(self, e){ count(this, 'secondGuesses'); }
+        });
+    </script>
+    <script type=module>
+        import {defDoInvoke} from '/def.js';
+        const emc = await defDoInvoke(document.body);
+        // Set up inside a function scope, so this page keeps no reference of its own
+        // to #kitchen -- only the DOM (until the test removes it) and the enhancement.
+        (() => {
+            button.enh.get(emc).invocations = [
+                {hostOrPeerMethodName: 'engageInSecondGuessing', targetElement: document.querySelector('#kitchen')},
+                {hostOrPeerMethodName: 'engageInSecondGuessing', targetElement: new WeakRef(document.querySelector('#porch'))},
+            ];
+        })();
+    </script>
+</body>
+</html>

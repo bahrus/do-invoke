@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic do-invoke targetElement</title>
+    <!-- #include virtual="/imports.html" -->
+
+</head>
+<body>
+    <mood-stone itemscope>
+        <soul-searcher id=kitchen></soul-searcher>
+        <soul-searcher id=porch></soul-searcher>
+        <button id=button>Feeling great</button>
+    </mood-stone>
+    <div id=target></div>
+    <script type=module>
+        // Each method counts its calls in a data- attribute, to make them visible.
+        const count = (el, key) => el.dataset[key] = String(Number(el.dataset[key] ?? 0) + 1);
+        customElements.define('mood-stone', class extends HTMLElement {
+            howAmIFeelingAboutToday(self, e){ count(this, 'feelings'); }
+        });
+        customElements.define('soul-searcher', class extends HTMLElement {
+            engageInSecondGuessing(self, e){ count(this, 'secondGuesses'); }
+        });
+    </script>
+    <script type=module>
+        import {defDoInvoke} from '/def.js';
+        const emc = await defDoInvoke(document.body);
+        const kitchen = document.querySelector('#kitchen');
+        const porch = document.querySelector('#porch');
+        const original = {hostOrPeerMethodName: 'engageInSecondGuessing', targetElement: kitchen};
+        const doInvoke = button.enh.get(emc);
+        doInvoke.invocations = [
+            original,
+            {hostOrPeerMethodName: 'engageInSecondGuessing', targetElement: new WeakRef(porch)},
+            'howAmIFeelingAboutToday',
+        ];
+        setTimeout(async () => {
+            button.click();
+            setTimeout(() => {
+                const checks = {
+                    kitchen: kitchen.dataset.secondGuesses === '1',
+                    porch: porch.dataset.secondGuesses === '1',
+                    host: document.querySelector('mood-stone').dataset.feelings === '1',
+                    storedWeakly: doInvoke.invocations[0].targetElement instanceof WeakRef
+                        && doInvoke.invocations[0].targetElement.deref() === kitchen,
+                    callerUntouched: original.targetElement === kitchen,
+                };
+                target.dataset.checks = JSON.stringify(checks);
+                if(Object.values(checks).every(Boolean)) target.setAttribute('mark', 'good');
+            }, 300);
+        }, 1500);
+    </script>
+</body>
+</html>
